@@ -1,81 +1,97 @@
-class Node {
-    constructor(x, y, z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.previous = false;
-    }
-}
-
 class DepthFirstSearchCube {
-    constructor() {
-        this.grid = []; // each cell grid[x][y][z] is true if the node has been visited, else false
-        this.currentNode = new Node(0, 0, 0); // previous = false
+    constructor(LEVEL, CANVAS_GRID_SIZE) {
+        this.CANVAS_GRID_SIZE = CANVAS_GRID_SIZE;
 
-        for (var x = 0; x < 256; x++) {
+        this.grid = []; // each cell grid[x][y][z] is true if the node has been visited, else false
+
+        for (let x = 0; x < 256; x++) {
             const plane = [];
-            for (var y = 0; y < 256; y++) {
+            for (let y = 0; y < 256; y++) {
                 const row = [];
-                for (var z = 0; z < 256; z++) {
+                for (let z = 0; z < 256; z++) {
                     row[z] = false;
                 }
                 plane.push(row);
             }
             this.grid.push(plane);
         }
-        this.grid[this.currentNode.x][this.currentNode.y][this.currentNode.z] = true;
+
+        this.Node = class {
+            constructor(x, y, z) {
+                this.x = x;
+                this.y = y;
+                this.z = z;
+                this.previous = false;
+            }
+        }
+    }
+
+    getName() {
+        return 'DFS';
     }
 
     getAdjacentNodes(node) {
         const adjacent = [];
-		for (var x = -1; x <= 1; x++) {
-			for (var y = -1; y <= 1; y++) {
-				for (var z = -1; z <= 1; z++) {
-					if (x !== 0 || y !== 0 || z !== 0) {
-						adjacent.push(new Node(node.x + x, node.y + y, node.z + z));
-					}
-				}
-			}
-		}
 
-        for (var i = adjacent.length - 1; i >= 0; i--) {
-            if (this.nodeInVisitedNodes(adjacent[i])) {
+        // makes sure to not add coordinates outside the RGB cube range
+        const minX = Math.max(node.x - 1, 0);
+        const minY = Math.max(node.y - 1, 0);
+        const minZ = Math.max(node.z - 1, 0);
+        const maxX = Math.min(node.x + 1, 255);
+        const maxY = Math.min(node.y + 1, 255);
+        const maxZ = Math.min(node.z + 1, 255);
+
+        for (let x = minX; x <= maxX; x++) {
+            for (let y = minY; y <= maxY; y++) {
+                for (let z = minZ; z <= maxZ; z++) {
+                    // do not add the same cell to the adjacent list
+                    if (x !== node.x || y !== node.y || z !== node.z) {
+                        adjacent.push(new this.Node(x, y, z));
+                    }
+                }
+            }
+        }
+
+        for (let i = adjacent.length - 1; i >= 0; i--) {
+            const adj = adjacent[i];
+            if (this.grid[adj.x][adj.y][adj.z]) {
                 adjacent.splice(i, 1);
             }
         }
         return adjacent;
     }
-    
-    nodeInVisitedNodes(node) {
-        if (node.x < 0 || node.y < 0 || node.z < 0 ||
-            node.x > 255 || node.y > 255 || node.z > 255) {
-            return true;
-        }
-        return this.grid[node.x][node.y][node.z];
-    }
 
-    getNextColor() {
-        let r = this.currentNode.x.toString(16);
-        let g = this.currentNode.y.toString(16);
-        let b = this.currentNode.z.toString(16);
-        if (r.length < 2) r = "0" + r;
-        if (g.length < 2) g = "0" + g;
-        if (b.length < 2) b = "0" + b;
+    *generator() {
+        let currentNode = new this.Node(0, 0, 0); // root node, where previous = false
 
-        let adjacentNodes = this.getAdjacentNodes(this.currentNode);
-        while (adjacentNodes.length === 0) {
-            if (this.currentNode.previous === false) {
-                return "#505050";
+        yield '#000000';
+
+        let n = 1;
+        const end = this.CANVAS_GRID_SIZE * this.CANVAS_GRID_SIZE;
+
+        while (n < end) {
+            this.grid[currentNode.x][currentNode.y][currentNode.z] = true;
+
+            let adjacentNodes = this.getAdjacentNodes(currentNode);
+            while (adjacentNodes.length === 0) {
+                currentNode = currentNode.previous;
+                adjacentNodes = this.getAdjacentNodes(currentNode);
             }
-            this.currentNode = this.currentNode.previous;
-            adjacentNodes = this.getAdjacentNodes(this.currentNode);
+
+            const newNode = adjacentNodes[Math.floor(Math.random() * adjacentNodes.length)];
+            newNode.previous = currentNode;
+            currentNode = newNode;
+
+            let r = currentNode.x.toString(16);
+            let g = currentNode.y.toString(16);
+            let b = currentNode.z.toString(16);
+            if (r.length < 2) r = '0' + r;
+            if (g.length < 2) g = '0' + g;
+            if (b.length < 2) b = '0' + b;
+
+            yield '#' + r + g + b;
+
+            n++;
         }
-
-        const newNode = adjacentNodes[Math.floor(Math.random() * adjacentNodes.length)];
-        newNode.previous = this.currentNode;
-        this.grid[newNode.x][newNode.y][newNode.z] = true;
-        this.currentNode = newNode;
-
-        return "#" + r + g + b;
     }
 }

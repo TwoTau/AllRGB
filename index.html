@@ -1,42 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>AllRGB Moore Curve</title>
-    <style>
-    body {
-        background: #223;
-        color: #ccc;
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>AllRGB</title>
+	<style>
+	body {
+		background: #223;
+		color: #ddd;
 		text-align: center;
-    }
-	h1 {
-        font-family: "Montserrat", sans-serif;
+	}
+	h1, h2 {
+		font-family: "Montserrat", sans-serif;
 		font-weight: 400;
 		font-size: 32px;
 		margin: 16px;
+		line-height: 20px;
+		opacity: 0.8;
 	}
-    canvas {
-        background: #fff;
-        box-shadow: 1px 2px 4px 0 #111;
-    }
-    </style>
+	#traversers {
+		font-size: 24px;
+		color: #999;
+	}
+	canvas {
+		background: #fff;
+		box-shadow: 1px 2px 4px 0 #111;
+	}
+	</style>
 </head>
 <body>
-    <h1>Procedural AllRGB Moore Curve</h1>
-    <canvas id="canvas" width="4096" height="4096"></canvas>
+	<h1>Procedural AllRGB: <span id="canvas-size">512×512</span></h1>
+	<h2 id="traversers">Plane + Cube</h2>
+	<canvas id="canvas" width="4096" height="4096"></canvas>
 
-    <!-- Plane Traversers -->
-    <script src="moore-plane.js" charset="utf-8"></script>
-    <script src="dfs-plane.js" charset="utf-8"></script>
-    <script src="serpentine-plane.js" charset="utf-8"></script>
+	<!-- Plane Traversers -->
+	<script src="moore-plane.js" charset="utf-8"></script>
+	<script src="dfs-plane.js" charset="utf-8"></script>
+	<script src="serpentine-plane.js" charset="utf-8"></script>
 
-    <!-- RGB Cube Traversers -->
-    <script src="dfs-cube.js" charset="utf-8"></script>
-    <script src="serpentine-cube.js" charset="utf-8"></script>
-    <script src="hsl-cube.js" charset="utf-8"></script>
+	<!-- RGB Cube Traversers -->
+	<script src="dfs-cube.js" charset="utf-8"></script>
+	<script src="serpentine-cube.js" charset="utf-8"></script>
+	<script src="hsl-cube.js" charset="utf-8"></script>
 
-    <script src="script.js" charset="utf-8"></script>
+	<script src="script.js" charset="utf-8"></script>
 </body>
 </html>
