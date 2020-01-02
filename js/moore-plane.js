@@ -14,7 +14,6 @@ class MoorePlane {
 		// generate instructions for the Moore Curve using the Lindenmayer system
 		this.systemPos = 0;
 		this.SYSTEM = this.generateInstructions();
-		console.log(this.SYSTEM);
 	}
 
 	getName() {

@@ -1,3 +1,5 @@
+document.addEventListener("DOMContentLoaded", function(event) {
+
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
@@ -82,7 +84,7 @@ function setup() {
 	document.getElementsByTagName('title')[0].innerHTML = `AllRGB [${title}]`;
 	document.getElementById('traversers').innerHTML = title;
 	document.getElementById('canvas-size').innerHTML = `${canvas.width}x${canvas.height}`;
-	
+
 	loop();
 }
 
@@ -115,3 +117,5 @@ function loop() {
 }
 
 setup();
+
+});

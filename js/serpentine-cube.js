@@ -8,17 +8,11 @@ class SerpentineCube {
 	}
 
 	*generator() {
-		let n = 0;
 		const end = this.CANVAS_GRID_SIZE * this.CANVAS_GRID_SIZE;
-		while (n < end) {
+		for (let n = 0; n < end; n++) {
 			const ratio = n / end;
-
-			let hex = Math.floor(ratio * 16777216).toString(16);
-			while (hex.length < 6) {
-				hex = '0' + hex;
-			}
-			n++;
-			yield '#' + hex;
+			const hex = Math.floor(ratio * 16777216).toString(16);
+			yield '#' + hex.padStart(6, '0');
 		}
 	}
 }
